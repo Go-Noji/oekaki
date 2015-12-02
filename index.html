@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>DEMO</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <!--[if lt IE 9]> 
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script> 
+        <![endif]-->
+    </head>
+    <body>
+        <h1>DEMO</h1>
+        <div id="toolBox">
+            <div id="brush">
+                <h2>Brushs</h2>
+                <ul class="clearfix">
+                    <li id="brush1"><img src="images/1.png" /></li>
+                    <li id="brush2"><img src="images/2.png" /></li>
+                    <li id="brush3"><img src="images/3.png" /></li>
+                    <li id="brush4"><img src="images/4.png" /></li>
+                    <li id="brush5"><img src="images/5.png" /></li>
+                    <li id="brush6"><img src="images/6.png" /></li>
+                    <li id="brush7"><img src="images/7.png" /></li>
+                    <li id="brush8"><img src="images/8.png" /></li>
+                    <li id="brush9"><img src="images/9.png" /></li>
+                </ul>
+                <label><p>Add iamge URL</p><input id="imageInput" type="text" /></label><input id="imageAddButton" type="button" value="Add">
+            </div>
+            <div class="undoAndRedo">
+                <h2>Undo &amp; Redo</h2>
+                <input id="undo" type="button" value="Undo" />
+                <input id="redo" type="button" value="Redo" />
+            </div>
+        </div>
+        <div id="field">
+        </div>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/init.js"></script>
+    </body>
+</html>
