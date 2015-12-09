@@ -1,6 +1,9 @@
 var cursorImg = ['1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png'];
 var rnd = 0;
-var brush = '';
+var brush = 'images/1.png';
+var brushSize = 10;
+var startPointX = 0;
+var startPointY = 0;
 var actionCount = 0;
 var highActionCount = 0;
 var undoFlg = 0;
@@ -11,6 +14,13 @@ function fieldArea(){
         'height':wh
     });
 }
+function startBrush(){
+    $('#brush1').addClass('active');
+    $('#field').css({
+        'cursor':'url('+ brush +'),auto'
+    });
+    brushSize = $('#brushSize').val();
+}
 function bomb(){
     rnd = Math.floor(Math.random()*9);
     $('#field').css({
@@ -19,8 +29,8 @@ function bomb(){
     setTimeout(bomb,100);
 }
 function afterImage(e){
-    var pw = e.clientX;
-    var ph = e.clientY;
+    var pw = e.clientX - Math.floor(brushSize/2);
+    var ph = e.clientY - Math.floor(brushSize/2);
     if(e.shiftKey){
         if(undoFlg==1){
             $('#field').find('img').each(function(){
@@ -30,7 +40,7 @@ function afterImage(e){
             });
             undoFlg = 0;
         }
-        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pw +'px;top: '+ ph +'px" />');
+        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pw +'px;top: '+ ph +'px" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
     }
 }
 function brushSelect(target){
@@ -84,9 +94,8 @@ function redo(){
 }
 
 $(function(){
-    //radioCreator();
     fieldArea();
-    //bomb();
+    startBrush();
     var timer = false;
     $(window).resize(function(){
         if(timer!==false){
@@ -98,6 +107,7 @@ $(function(){
     });
     $('#field').mousemove(function(e){
         afterImage(e);
+        brushSizing(e);
     });
     $('#brush').on('click','li',function(){
         brushSelect($(this));
@@ -111,6 +121,14 @@ $(function(){
             highActionCount = actionCount;
         }
     });
+    $(window).keydown(function(e){
+        var x = e.clientX;
+        var y = e.clientY;
+        if(e.keyCode=='17'){
+            startPointX = x;
+            startPointY = y;
+        }
+    });
     $('#imageAddButton').click(function(){
         if($('#imageInput').val()!==''){
             addBrush($('#imageInput').val());
@@ -122,4 +140,24 @@ $(function(){
     $('#redo').click(function (){
         redo();
     });
+    $('body').keydown(function(e){
+        if(e.ctrlKey){
+            console.log('POW!');
+            if(e.keyCode=='90'){
+                if(e.shiftKey){
+                    redo();
+                    return false;
+                }
+                else{
+                    undo();
+                    return false;
+                }
+            }
+        }
+    });
+    $('#brushSize').change(function(){
+        var size = $(this).val();
+        console.log(size);
+        brushSize = size;
+    })
 });
