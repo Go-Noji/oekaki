@@ -37,10 +37,29 @@
             </div>
             <div class="sizing">
                 <h2>Brush size</h2>
-                <input id="brushSize" type="number" value="10" /><span>px</span>
+                <input id="brushSize" type="number" value="10" min="1" /><span>px</span>
+            </div>
+            <div class="blur">
+                <h2>Brush blur</h2>
+                <input id="blurSize" type="number" value="0" min="0" /><span>px</span>
+            </div>
+            <div class="opacity">
+                <h2>Brush opacity</h2>
+                <input id="brushOpacity" type="number" value="1" min="0" max="1" step="0.01" /><span>px</span>
+            </div>
+            <div class="backColor">
+                <h2>Back color</h2>
+                <input id="backColor" type="color" value="0" min="0" />
+                <input id="noColor" type="button" value="Nocolor" />
+            </div>
+            <div class="cursorMode">
+                <h2>Cursor mode</h2>
+                <label><input id="defaultMode" type="radio" name="cursorMode" checked />def</label>
+                <label><input id="ghostMode" type="radio" name="cursorMode" />Ghost</label>
             </div>
         </div>
         <div id="field">
+            <img id="ghostPoint" />
         </div>
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/init.js"></script>

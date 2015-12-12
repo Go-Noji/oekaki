@@ -2,8 +2,13 @@ var cursorImg = ['1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png'
 var rnd = 0;
 var brush = 'images/1.png';
 var brushSize = 10;
+var blurSize = 0;
+var brushOpacity = 1;
+var backColor = 'transparent';
 var startPointX = 0;
 var startPointY = 0;
+var fieldX = 0;
+var fieldY = 0;
 var actionCount = 0;
 var highActionCount = 0;
 var undoFlg = 0;
@@ -13,13 +18,22 @@ function fieldArea(){
     $('#toolBox,#field').css({
         'height':wh
     });
+    fieldX = $('#field').offset().left;
+    fieldY = $('#field').offset().top;
 }
 function startBrush(){
+    $('#defaultMode').prop('checked',true);
     $('#brush1').addClass('active');
-    $('#field').css({
-        'cursor':'url('+ brush +'),auto'
-    });
+    cursorImage();
     brushSize = $('#brushSize').val();
+    blurSize = $('#blurSize').val();
+    $('#backColor').val('#000');
+    brushOpacity = $('#brushOpacity').val();
+    $('#ghostPoint').attr('src',brush);
+    $('#ghostPoint').css({
+        'width':brushSize,
+        'height':brushSize
+    });
 }
 function bomb(){
     rnd = Math.floor(Math.random()*9);
@@ -29,8 +43,12 @@ function bomb(){
     setTimeout(bomb,100);
 }
 function afterImage(e){
-    var pw = e.clientX - Math.floor(brushSize/2);
-    var ph = e.clientY - Math.floor(brushSize/2);
+    var pl = e.clientX - brushSize/2 -fieldX;
+    var pt = e.clientY - brushSize/2 -fieldY;
+    $('#ghostPoint').css({
+        'left':pl,
+        'top':pt
+    });
     if(e.shiftKey){
         if(undoFlg==1){
             $('#field').find('img').each(function(){
@@ -40,18 +58,24 @@ function afterImage(e){
             });
             undoFlg = 0;
         }
-        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pw +'px;top: '+ ph +'px" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
+        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + blurSize + 'px); -ms-filter: blur(' + blurSize + 'px); filter: blur(' + blurSize + 'px); opacity: ' + brushOpacity + '" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
     }
+}
+function cursorImage(){
+    $('#field').css({
+        'cursor':'url('+ brush +'),auto'
+    });
 }
 function brushSelect(target){
     brush = target.find('img').attr('src');
     $('#brush').find('li').each(function(){
         $(this).removeClass('active');
     });
+    if($('[name=cursorMode]:checked').attr('id')=='defaultMode'){
+        cursorImage();
+    }
     target.addClass('active');
-    $('#field').css({
-        'cursor':'url('+ brush +'),auto'
-    });
+    $('#ghostPoint').attr('src',brush);
 }
 function addBrush(url){
     $('#brush').find('ul').append('<li id="brush9"><img src="'+url+'" /></li>');
@@ -69,7 +93,6 @@ function undo(){
         }
     });
     actionCount--;
-    console.log(count);
     if(count==0&&actionCount>0){
         setTimeout(undo,100);
     }
@@ -107,7 +130,6 @@ $(function(){
     });
     $('#field').mousemove(function(e){
         afterImage(e);
-        brushSizing(e);
     });
     $('#brush').on('click','li',function(){
         brushSelect($(this));
@@ -115,7 +137,6 @@ $(function(){
     $(window).keyup(function(e){
         if(e.keyCode=='16'){
             actionCount++;
-            console.log(actionCount);
         }
         if(actionCount>highActionCount){
             highActionCount = actionCount;
@@ -142,7 +163,6 @@ $(function(){
     });
     $('body').keydown(function(e){
         if(e.ctrlKey){
-            console.log('POW!');
             if(e.keyCode=='90'){
                 if(e.shiftKey){
                     redo();
@@ -157,7 +177,74 @@ $(function(){
     });
     $('#brushSize').change(function(){
         var size = $(this).val();
-        console.log(size);
         brushSize = size;
-    })
+        $('#ghostPoint').css({
+            'width':brushSize,
+            'height':brushSize
+        });
+        if($(this).val()<1){
+            $(this).val(1);
+        }
+    });
+    $('#blurSize').change(function(){
+        var size = $(this).val();
+        blurSize = size;
+        $('#ghostPoint').css({
+            '-webkit-filter': 'blur(' + blurSize + 'px)',
+            '-ms-filter': 'blur(' + blurSize + 'px)',
+            'filter': 'blur(' + blurSize + 'px)'
+        });
+        if($(this).val()<0){
+            $(this).val(0);
+        }
+    });
+    $('#brushOpacity').change(function(){
+        var size = $(this).val();
+        brushOpacity = size;
+        if($(this).val()<0){
+            $(this).val(0);
+        }
+        else if($(this).val()>1){
+            $(this).val(1);
+        }
+    });
+    $('#backColor').change(function(){
+        backColor = $(this).val();
+        $('#field').css({
+            'background-color':backColor
+        });
+    });
+    $('#noColor').click(function(){
+        backColor = 'transparent';
+        $('#field').css({
+            'background-color':backColor
+        });
+    });
+    $('[name=cursorMode]').change(function(){
+        var mode = $('[name=cursorMode]:checked').attr('id');
+        if(mode=='defaultMode'){
+            cursorImage();
+            $('#ghostPoint').css({
+                'display':''
+            });
+        }
+        else if(mode=='ghostMode'){
+            $('#field').css({
+                'cursor':'none'
+            });
+            $('#ghostPoint').css({
+                'display':'block'
+            });
+        }
+    });
+    $('#field').click(function(e){
+        var pl = e.clientX - brushSize/2 -fieldX;
+        var pt = e.clientY - brushSize/2 -fieldY;
+        $(this).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + blurSize + 'px); -ms-filter: blur(' + blurSize + 'px); filter: blur(' + blurSize + 'px); opacity: ' + brushOpacity + '" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
+        actionCount++;
+        if(actionCount>highActionCount){
+            highActionCount = actionCount;
+        }
+        console.log(fieldX+','+fieldY);
+    });
 });

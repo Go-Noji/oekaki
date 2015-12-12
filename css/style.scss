@@ -15,20 +15,16 @@ hrml, body, h1, form, input {
 li{
     list-style-type: none;
 }
-
 body {
     background: #000;
     overflow: hidden;
     padding: 10px;
     color: #FFF;
 }
-
 h2{
-    padding: 0 10px;
     margin-bottom: 10px;
     font-size: 16px;
 }
-
 #toolBox{
     float: left;
     width: 20%;
@@ -40,18 +36,17 @@ h2{
     width: 78%;
     border: 1px solid #FFF;
     overflow: hidden;
+    position: relative;
+    cursor: none;
+    input {
+        margin: 10px;
+        position: absolute;
+        border: 1px solid #FFF;
+    }
 }
-
-#field input {
-    margin: 10px;
-    position: absolute;
-    border: 1px solid #FFF;
-}
-
 .afterImage {
     position: absolute;
 }
-
 #brush{
     ul{
         margin: 0;
@@ -104,4 +99,23 @@ h2{
         width: 40%;
         padding-left: 10px;
     }
+}
+.blur{
+    @extend .sizing;
+}
+.opacity{
+    @extend .sizing;
+    width: 40%;
+}
+.backColor{
+    @extend .sizing;
+}
+.cursorMode{
+    float: left;
+    width: 40%;
+}
+#ghostPoint{
+    position: absolute;
+    opacity: 0.5;
+    display: none;
 }

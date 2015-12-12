@@ -25,7 +25,6 @@ body {
 }
 
 h2 {
-  padding: 0 10px;
   margin-bottom: 10px;
   font-size: 16px;
 }
@@ -42,6 +41,8 @@ h2 {
   width: 78%;
   border: 1px solid #FFF;
   overflow: hidden;
+  position: relative;
+  cursor: none;
 }
 
 #field input {
@@ -99,19 +100,34 @@ h2 {
   margin-left: 10px;
 }
 
-.sizing {
+.sizing, .blur, .opacity, .backColor {
   float: left;
   width: 30%;
 }
 
-.sizing input {
+.sizing input, .blur input, .opacity input, .backColor input {
   float: left;
   width: 60%;
 }
 
-.sizing span {
+.sizing span, .blur span, .opacity span, .backColor span {
   float: left;
   display: block;
   width: 40%;
   padding-left: 10px;
+}
+
+.opacity {
+  width: 40%;
+}
+
+.cursorMode {
+  float: left;
+  width: 40%;
+}
+
+#ghostPoint {
+  position: absolute;
+  opacity: 0.5;
+  display: none;
 }
