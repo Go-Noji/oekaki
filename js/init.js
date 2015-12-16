@@ -12,11 +12,18 @@ var fieldY = 0;
 var actionCount = 0;
 var highActionCount = 0;
 var undoFlg = 0;
+var canvasFlg = 0;
+var pl = 0;
+var pt = 0;
 
 function fieldArea(){
     var wh = $(window).height() - 60;
+    var cw = $('#field').width();
     $('#toolBox,#field').css({
         'height':wh
+    });
+    $('#field').css({
+        'width':cw
     });
     fieldX = $('#field').offset().left;
     fieldY = $('#field').offset().top;
@@ -43,20 +50,13 @@ function bomb(){
     setTimeout(bomb,100);
 }
 function afterImage(e){
-    var pl = e.clientX - brushSize/2 -fieldX;
-    var pt = e.clientY - brushSize/2 -fieldY;
     $('#ghostPoint').css({
         'left':pl,
         'top':pt
     });
     if(e.shiftKey){
         if(undoFlg==1){
-            $('#field').find('img').each(function(){
-                if($(this).hasClass('undo')){
-                    $(this).remove();
-                }
-            });
-            undoFlg = 0;
+            resetUndo();
         }
         $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + blurSize + 'px); -ms-filter: blur(' + blurSize + 'px); filter: blur(' + blurSize + 'px); opacity: ' + brushOpacity + '" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
     }
@@ -115,6 +115,35 @@ function redo(){
         }
     }
 }
+function resetUndo(){
+    $('#field').find('img').each(function(){
+        if($(this).hasClass('undo')){
+            $(this).remove();
+        }
+    });
+    undoFlg = 0;
+}
+function canvasDraw(e){
+    if(e.shiftKey){
+        var x = e.clientX;
+        var y = e.clientY;
+        console.log(startPointX+','+x+':'+startPointY+','+y);
+        var canvas = document.getElementById("field");
+        var context = canvas.getContext('2d');
+        context.strokeStyle = "rgba(255,0,0,1)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.moveTo(startPointX, startPointY);
+        context.lineTo(x, y);
+        context.stroke();
+        context.closePath();
+        startPointX = x;
+        startPointY = y;
+        if(undoFlg==1){
+            resetUndo();
+        }
+    }
+}
 
 $(function(){
     fieldArea();
@@ -128,8 +157,23 @@ $(function(){
             fieldArea();
         },200);
     });
+    $(window).keydown(function(e){
+        var x = e.clientX;
+        var y = e.clientY;
+        if(e.keyCode=='16'){
+            startPointX = x;
+            startPointY = y;
+        }
+    });
     $('#field').mousemove(function(e){
-        afterImage(e);
+        pl = e.clientX - brushSize/2 -fieldX;
+        pt = e.clientY - brushSize/2 -fieldY;
+        if(canvasFlg===0){
+            afterImage(e);
+        }
+        else{
+            canvasDraw(e);
+        }
     });
     $('#brush').on('click','li',function(){
         brushSelect($(this));
@@ -140,14 +184,6 @@ $(function(){
         }
         if(actionCount>highActionCount){
             highActionCount = actionCount;
-        }
-    });
-    $(window).keydown(function(e){
-        var x = e.clientX;
-        var y = e.clientY;
-        if(e.keyCode=='17'){
-            startPointX = x;
-            startPointY = y;
         }
     });
     $('#imageAddButton').click(function(){
