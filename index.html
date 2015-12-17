@@ -16,15 +16,16 @@
             <div id="brush">
                 <h2>Image Brushs</h2>
                 <ul class="clearfix">
-                    <li id="brush1"><img src="images/1.png" /></li>
-                    <li id="brush2"><img src="images/2.png" /></li>
-                    <li id="brush3"><img src="images/3.png" /></li>
-                    <li id="brush4"><img src="images/4.png" /></li>
-                    <li id="brush5"><img src="images/5.png" /></li>
-                    <li id="brush6"><img src="images/6.png" /></li>
-                    <li id="brush7"><img src="images/7.png" /></li>
-                    <li id="brush8"><img src="images/8.png" /></li>
-                    <li id="brush9"><img src="images/9.png" /></li>
+                    <li class="active"><img src="images/1.png" /></li>
+                    <li><img src="images/2.png" /></li>
+                    <li><img src="images/3.png" /></li>
+                    <li><img src="images/4.png" /></li>
+                    <li><img src="images/5.png" /></li>
+                    <li><img src="images/6.png" /></li>
+                    <li><img src="images/7.png" /></li>
+                    <li><img src="images/8.png" /></li>
+                    <li><img src="images/9.png" /></li>
+                    <li id="rndBrush">rnd</li>
                 </ul>
             </div>
             <div class="addImage">
@@ -57,11 +58,17 @@
                 <label><input id="defaultMode" type="radio" name="cursorMode" checked />def</label>
                 <label><input id="ghostMode" type="radio" name="cursorMode" />Ghost</label>
             </div>
+            <div class="capture">
+                <h2>Capture</h2>
+                <input id="capture" type="button" value="capture" />
+                <a id="captureData" class="captureData" href="" target="_blank">aaa</a>
+            </div>
         </div>
         <div id="field">
             <img id="ghostPoint" />
         </div>
         <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/html2canvas.min.js"></script>
         <script type="text/javascript" src="js/init.js"></script>
     </body>
 </html>

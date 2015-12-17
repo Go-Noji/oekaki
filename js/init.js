@@ -1,4 +1,4 @@
-var cursorImg = ['1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png'];
+var cursorList = ['images/1.png','images/2.png','images/3.png','images/4.png','images/5.png','images/6.png','images/7.png','images/8.png','images/9.png'];
 var rnd = 0;
 var brush = 'images/1.png';
 var brushSize = 10;
@@ -15,6 +15,7 @@ var undoFlg = 0;
 var canvasFlg = 0;
 var pl = 0;
 var pt = 0;
+var bombTimer = '';
 
 function fieldArea(){
     var wh = $(window).height() - 60;
@@ -42,13 +43,6 @@ function startBrush(){
         'height':brushSize
     });
 }
-function bomb(){
-    rnd = Math.floor(Math.random()*9);
-    $('#field').css({
-        'cursor':'url(images/'+ cursorImg[rnd] +'),auto'
-    });
-    setTimeout(bomb,100);
-}
 function afterImage(e){
     $('#ghostPoint').css({
         'left':pl,
@@ -63,10 +57,11 @@ function afterImage(e){
 }
 function cursorImage(){
     $('#field').css({
-        'cursor':'url('+ brush +'),auto'
+        'cursor':'default'
     });
 }
 function brushSelect(target){
+    clearTimeout(bombTimer);
     brush = target.find('img').attr('src');
     $('#brush').find('li').each(function(){
         $(this).removeClass('active');
@@ -74,11 +69,15 @@ function brushSelect(target){
     if($('[name=cursorMode]:checked').attr('id')=='defaultMode'){
         cursorImage();
     }
+    if(target.attr('id')=='rndBrush'){
+        bomb();
+    }
     target.addClass('active');
     $('#ghostPoint').attr('src',brush);
 }
 function addBrush(url){
-    $('#brush').find('ul').append('<li id="brush9"><img src="'+url+'" /></li>');
+    $('#rndBrush').before('<li><img src="'+url+'" /></li>');
+    cursorList.push(url);
 }
 function undo(){
     undoFlg = 1;
@@ -122,6 +121,14 @@ function resetUndo(){
         }
     });
     undoFlg = 0;
+}
+function bomb(){
+    var num = cursorList.length;
+    rnd = Math.floor(Math.random()*num);
+    $('#ghostPoint').attr('src',brush);
+    brush = cursorList[rnd];
+    console.log($('#ghostPoint').attr('src'));
+    bombTimer = setTimeout(bomb,100);
 }
 function canvasDraw(e){
     if(e.shiftKey){
@@ -282,5 +289,14 @@ $(function(){
             highActionCount = actionCount;
         }
         console.log(fieldX+','+fieldY);
+    });
+    $('#capture').click(function(){
+        html2canvas(document.body,{
+            onrendered: function(canvas){
+                //aタグのhrefにキャプチャ画像のURLを設定
+                document.getElementById("captureData").href = canvas.toDataURL("image/png");
+            }
+        });
+        $('#captionData').trigger('click');
     });
 });
