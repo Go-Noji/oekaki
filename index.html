@@ -37,16 +37,28 @@
                 <input id="redo" type="button" value="Redo" />
             </div>
             <div class="sizing">
-                <h2>Brush size</h2>
+                <h2>size</h2>
                 <input id="brushSize" type="number" value="10" min="1" /><span>px</span>
             </div>
             <div class="blur">
-                <h2>Brush blur</h2>
-                <input id="blurSize" type="number" value="0" min="0" /><span>px</span>
+                <h2>blur</h2>
+                <input id="brushBlur" type="number" value="0" min="0" /><span>px</span>
             </div>
             <div class="opacity">
-                <h2>Brush opacity</h2>
+                <h2>opacity</h2>
                 <input id="brushOpacity" type="number" value="1" min="0" max="1" step="0.01" /><span>px</span>
+            </div>
+            <div class="saturate">
+                <h2>saturate</h2>
+                <input id="brushSaturate" type="number" value="50" min="0" max="200" step="1" /><span>%</span>
+            </div>
+            <div class="brightness">
+                <h2>brightness</h2>
+                <input id="brushBrightness" type="number" value="1" min="0" max="2" step="0.1" /><span></span>
+            </div>
+            <div class="hue">
+                <h2>hue-rotate</h2>
+                <input id="brushHue" type="number" value="0" min="0" max="360" step="1" /><span>dec</span>
             </div>
             <div class="backColor">
                 <h2>Back color</h2>
@@ -57,11 +69,6 @@
                 <h2>Cursor mode</h2>
                 <label><input id="defaultMode" type="radio" name="cursorMode" checked />def</label>
                 <label><input id="ghostMode" type="radio" name="cursorMode" />Ghost</label>
-            </div>
-            <div class="capture">
-                <h2>Capture</h2>
-                <input id="capture" type="button" value="capture" />
-                <a id="captureData" class="captureData" href="" target="_blank">aaa</a>
             </div>
         </div>
         <div id="field">

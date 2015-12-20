@@ -36,6 +36,10 @@ h2 {
   padding: 10px;
 }
 
+#toolBox div {
+  margin-bottom: 10px;
+}
+
 #field {
   float: right;
   width: 78%;
@@ -102,24 +106,24 @@ h2 {
   margin-left: 10px;
 }
 
-.sizing, .blur, .opacity, .backColor {
+.sizing, .blur, .saturate, .brightness, .opacity, .hue, .backColor {
   float: left;
   width: 30%;
 }
 
-.sizing input, .blur input, .opacity input, .backColor input {
+.sizing input, .blur input, .saturate input, .brightness input, .opacity input, .hue input, .backColor input {
   float: left;
   width: 60%;
 }
 
-.sizing span, .blur span, .opacity span, .backColor span {
+.sizing span, .blur span, .saturate span, .brightness span, .opacity span, .hue span, .backColor span {
   float: left;
   display: block;
   width: 40%;
   padding-left: 10px;
 }
 
-.opacity {
+.opacity, .hue {
   width: 40%;
 }
 

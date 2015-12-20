@@ -30,6 +30,9 @@ h2{
     width: 20%;
     border: 1px solid #FFF;
     padding: 10px;
+    div{
+        margin-bottom: 10px;
+    }
 }
 #field {
     float: right;
@@ -102,10 +105,10 @@ h2{
         padding-left: 10px;
     }
 }
-.blur{
+.blur,.saturate,.brightness{
     @extend .sizing;
 }
-.opacity{
+.opacity,.hue{
     @extend .sizing;
     width: 40%;
 }

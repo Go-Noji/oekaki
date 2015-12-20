@@ -2,8 +2,11 @@ var cursorList = ['images/1.png','images/2.png','images/3.png','images/4.png','i
 var rnd = 0;
 var brush = 'images/1.png';
 var brushSize = 10;
-var blurSize = 0;
+var brushBlur = 0;
 var brushOpacity = 1;
+var brushSaturate = 100;
+var brushBrightness = 1;
+var brushHue = 0;
 var backColor = 'transparent';
 var startPointX = 0;
 var startPointY = 0;
@@ -34,9 +37,14 @@ function startBrush(){
     $('#brush1').addClass('active');
     cursorImage();
     brushSize = $('#brushSize').val();
-    blurSize = $('#blurSize').val();
-    $('#backColor').val('#000');
+    brushBlur = $('#brushBlur').val();
     brushOpacity = $('#brushOpacity').val();
+    brushSaturate = $('#brushSaturate').val();
+    brushBrightness = $('#brushBrightness').val();
+    brushHue = $('#brushHue').val();
+    var brushBrightness = 1;
+    var brushHue = 1;
+    $('#backColor').val('#000');
     $('#ghostPoint').attr('src',brush);
     $('#ghostPoint').css({
         'width':brushSize,
@@ -52,7 +60,7 @@ function afterImage(e){
         if(undoFlg==1){
             resetUndo();
         }
-        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + blurSize + 'px); -ms-filter: blur(' + blurSize + 'px); filter: blur(' + blurSize + 'px); opacity: ' + brushOpacity + '" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
+        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
     }
 }
 function cursorImage(){
@@ -127,14 +135,12 @@ function bomb(){
     rnd = Math.floor(Math.random()*num);
     $('#ghostPoint').attr('src',brush);
     brush = cursorList[rnd];
-    console.log($('#ghostPoint').attr('src'));
     bombTimer = setTimeout(bomb,100);
 }
 function canvasDraw(e){
     if(e.shiftKey){
         var x = e.clientX;
         var y = e.clientY;
-        console.log(startPointX+','+x+':'+startPointY+','+y);
         var canvas = document.getElementById("field");
         var context = canvas.getContext('2d');
         context.strokeStyle = "rgba(255,0,0,1)";
@@ -154,7 +160,7 @@ function canvasDraw(e){
 
 $(function(){
     fieldArea();
-    startBrush();
+    setTimeout(startBrush,500);
     var timer = false;
     $(window).resize(function(){
         if(timer!==false){
@@ -219,37 +225,88 @@ $(function(){
         }
     });
     $('#brushSize').change(function(){
+        if($(this).val()<1){
+            $(this).val(1);
+        }
         var size = $(this).val();
         brushSize = size;
         $('#ghostPoint').css({
             'width':brushSize,
             'height':brushSize
         });
-        if($(this).val()<1){
-            $(this).val(1);
-        }
     });
-    $('#blurSize').change(function(){
-        var size = $(this).val();
-        blurSize = size;
-        $('#ghostPoint').css({
-            '-webkit-filter': 'blur(' + blurSize + 'px)',
-            '-ms-filter': 'blur(' + blurSize + 'px)',
-            'filter': 'blur(' + blurSize + 'px)'
-        });
+    $('#brushBlur').change(function(){
         if($(this).val()<0){
             $(this).val(0);
         }
+        var size = $(this).val();
+        brushBlur = size;
+        $('#ghostPoint').css({
+            '-webkit-filter': 'blur(' + brushBlur + 'px)',
+            '-ms-filter': 'blur(' + brushBlur + 'px)',
+            'filter': 'blur(' + brushBlur + 'px)'
+        });
     });
     $('#brushOpacity').change(function(){
-        var size = $(this).val();
-        brushOpacity = size;
         if($(this).val()<0){
             $(this).val(0);
         }
         else if($(this).val()>1){
             $(this).val(1);
         }
+        var size = $(this).val();
+        brushOpacity = size;
+    });
+    $('#brushSaturate').change(function(){
+        if($(this).val()<0){
+            $(this).val(0);
+        }
+        else if($(this).val()>200){
+            $(this).val(200);
+        }
+        var size = $(this).val();
+        brushSaturate = size;
+        $('#ghostPoint').css({
+            '-webkit-filter': 'saturate(' + brushSaturate + '%)',
+            '-moz-filter': 'saturate(' + brushSaturate + '%)',
+            '-o-filter': 'saturate(' + brushSaturate + '%)',
+            '-ms-filter': 'saturate(' + brushSaturate + '%)',
+            'filter': 'saturate(' + brushSaturate + '%)'
+        });
+    });
+    $('#brushBrightness').change(function(){
+        if($(this).val()<0){
+            $(this).val(0);
+        }
+        else if($(this).val()>2){
+            $(this).val(2);
+        }
+        var size = $(this).val();
+        brushBrightness = size;
+        $('#ghostPoint').css({
+            '-webkit-filter': 'brightness(' + brushBrightness + ')',
+            '-moz-filter': 'brightness(' + brushBrightness + ')',
+            '-o-filter': 'brightness(' + brushBrightness + ')',
+            '-ms-filter': 'brightness(' + brushBrightness + ')',
+            'filter': 'brightness(' + brushBrightness + ')'
+        });
+    });
+    $('#brushHue').change(function(){
+        if($(this).val()<0){
+            $(this).val(0);
+        }
+        else if($(this).val()>360){
+            $(this).val(360);
+        }
+        var size = $(this).val();
+        brushHue = size;
+        $('#ghostPoint').css({
+            '-webkit-filter': 'hue-rotate(' + brushHue + 'deg)',
+            '-moz-filter': 'hue-rotate(' + brushHue + 'deg)',
+            '-o-filter': 'hue-rotate(' + brushHue + 'deg)',
+            '-ms-filter': 'hue-rotate(' + brushHue + 'deg)',
+            'filter': 'hue-rotate(' + brushHue + 'deg)'
+        });
     });
     $('#backColor').change(function(){
         backColor = $(this).val();
@@ -283,20 +340,10 @@ $(function(){
     $('#field').click(function(e){
         var pl = e.clientX - brushSize/2 -fieldX;
         var pt = e.clientY - brushSize/2 -fieldY;
-        $(this).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + blurSize + 'px); -ms-filter: blur(' + blurSize + 'px); filter: blur(' + blurSize + 'px); opacity: ' + brushOpacity + '" width=" ' + brushSize + ' " height=" ' + brushSize + '" />');
+        $(this).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
         actionCount++;
         if(actionCount>highActionCount){
             highActionCount = actionCount;
         }
-        console.log(fieldX+','+fieldY);
-    });
-    $('#capture').click(function(){
-        html2canvas(document.body,{
-            onrendered: function(canvas){
-                //aタグのhrefにキャプチャ画像のURLを設定
-                document.getElementById("captureData").href = canvas.toDataURL("image/png");
-            }
-        });
-        $('#captionData').trigger('click');
     });
 });
