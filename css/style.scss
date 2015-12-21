@@ -41,10 +41,10 @@ h2{
     overflow: hidden;
     position: relative;
     cursor: none;
-    input {
-        margin: 10px;
+    .layer{
+        width: 100%;
+        height: 100%;
         position: absolute;
-        border: 1px solid #FFF;
     }
 }
 .afterImage {
@@ -123,15 +123,87 @@ h2{
     float: left;
     width: 40%;
 }
-.capture{
+.layerPanel{
     float: left;
-    width: 30%;
-    .captureData{
-        color: wheat;
+    width: 100%;
+    h2{
+        width: 70%;
+        float: left;
+    }
+    .layerPlusMinus{
+        width: 15%;
+        float: left;
+        display: block;
+    }
+    ul{
+        overflow-y: scroll;
+        height: 300px;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        float: left;
+        li{
+            padding: 10px 0;
+            height: 60px;
+            line-height: 280%;
+            border-bottom: #fff dashed 1px;
+            p{
+                float: left;
+                margin: 0;
+                text-align: center;
+            }
+            .layerVisibility{
+                width: 10%;
+                cursor: pointer;
+            }
+            .on{
+                &:before{
+                    content: '●';
+                }
+            }
+            .off{
+                &:before{
+                    content: '○';
+                }
+            }
+            .layerName{
+                width: 50%;
+                cursor: pointer;
+            }
+            .inputLayerName{
+                width: 50%;
+                height: 20px;
+                margin-top: 10px;
+                padding: 0 10px;
+                float: left;
+                display: none;
+            }
+            .imgNum{
+                width: 20%;
+            }
+            .upDown{
+                width: 20%;
+                input{
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                    height: 22px;
+                    display: block;
+                    line-height: 60%;
+                }
+            }
+        }
+        #lHead{
+            border-bottom: #fff solid 1px;
+        }
+        .activeLayer{
+            background: rgba(255,255,255,0.2);
+        }
     }
 }
 #ghostPoint{
     position: absolute;
     opacity: 0.5;
     display: none;
+    z-index: 9999;
 }

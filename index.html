@@ -70,12 +70,23 @@
                 <label><input id="defaultMode" type="radio" name="cursorMode" checked />def</label>
                 <label><input id="ghostMode" type="radio" name="cursorMode" />Ghost</label>
             </div>
+            <div class="layerPanel">
+                <h2>Layer</h2><input id="layerPlus" class="layerPlusMinus" type="button" value="+" /><input id="layerMinus" class="layerPlusMinus" type="button" value="-" />
+                <ul id="layerBox" class="clearfix">
+                    <li id="lHead" class="clearfix">
+                        <p class="layerVisibility">Visible</p><p class="layerName">Name</p><p class="imgNum">Img Num</p><p class="upDown">UpDown</p>
+                    </li>
+                    <li id="l1" class="activeLayer layerList clearfix">
+                        <p class="layerVisibility on"></p><p class="layerName">layer1</p><input class="inputLayerName" type="text" /><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div id="field">
             <img id="ghostPoint" />
+            <div id="layer1" class="layer" style="z-index:1;"></div>
         </div>
         <script type="text/javascript" src="js/jquery.min.js"></script>
-        <script type="text/javascript" src="js/html2canvas.min.js"></script>
         <script type="text/javascript" src="js/init.js"></script>
     </body>
 </html>

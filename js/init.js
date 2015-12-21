@@ -19,6 +19,8 @@ var canvasFlg = 0;
 var pl = 0;
 var pt = 0;
 var bombTimer = '';
+var nowLayer = 1;
+var highLayer = 1;
 
 function fieldArea(){
     var wh = $(window).height() - 60;
@@ -60,7 +62,7 @@ function afterImage(e){
         if(undoFlg==1){
             resetUndo();
         }
-        $('#field').append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
+        $('#layer' + nowLayer).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
     }
 }
 function cursorImage(){
@@ -137,25 +139,37 @@ function bomb(){
     brush = cursorList[rnd];
     bombTimer = setTimeout(bomb,100);
 }
-function canvasDraw(e){
-    if(e.shiftKey){
-        var x = e.clientX;
-        var y = e.clientY;
-        var canvas = document.getElementById("field");
-        var context = canvas.getContext('2d');
-        context.strokeStyle = "rgba(255,0,0,1)";
-        context.lineWidth = 3;
-        context.beginPath();
-        context.moveTo(startPointX, startPointY);
-        context.lineTo(x, y);
-        context.stroke();
-        context.closePath();
-        startPointX = x;
-        startPointY = y;
-        if(undoFlg==1){
-            resetUndo();
-        }
+function ghostFilterCss(){
+    $('#ghostPoint').css({
+        '-webkit-filter': 'blur(' + brushBlur + 'px) saturate(' + brushSaturate + '%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg)',
+        '-moz-filter': 'blur(' + brushBlur + 'px) saturate(' + brushSaturate + '%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg)',
+        '-o-filter': 'blur(' + brushBlur + 'px) saturate(' + brushSaturate + '%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg)',
+        '-ms-filter': 'blur(' + brushBlur + 'px) saturate(' + brushSaturate + '%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg)',
+        'filter': 'blur(' + brushBlur + 'px) saturate(' + brushSaturate + '%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg)'
+    });
+}
+function layerVisibility(target){
+    if(target.hasClass('on')){
+        target.removeClass('on');
+        target.addClass('off');
+        var num = target.parents('.layerList').attr('id').replace(/l/g,'');
+        $('#layer' + num).css({
+            'visibility':'hidden'
+        });
     }
+    else{
+        target.removeClass('off');
+        target.addClass('on');
+        var num = target.parents('.layerList').attr('id').replace(/l/g,'');
+        $('#layer' + num).css({
+            'visibility':''
+        });
+    }
+}
+function countImg(){
+    var num = $('#layer' + nowLayer).find('img').length;
+    var hidden = $('#layer' + nowLayer).find('.undo').length;
+    $('.activeLayer').find('.imgNum').text(num - hidden);
 }
 
 $(function(){
@@ -194,6 +208,7 @@ $(function(){
     $(window).keyup(function(e){
         if(e.keyCode=='16'){
             actionCount++;
+            countImg();
         }
         if(actionCount>highActionCount){
             highActionCount = actionCount;
@@ -215,10 +230,12 @@ $(function(){
             if(e.keyCode=='90'){
                 if(e.shiftKey){
                     redo();
+                    countImg();
                     return false;
                 }
                 else{
                     undo();
+                    countImg();
                     return false;
                 }
             }
@@ -241,11 +258,7 @@ $(function(){
         }
         var size = $(this).val();
         brushBlur = size;
-        $('#ghostPoint').css({
-            '-webkit-filter': 'blur(' + brushBlur + 'px)',
-            '-ms-filter': 'blur(' + brushBlur + 'px)',
-            'filter': 'blur(' + brushBlur + 'px)'
-        });
+        ghostFilterCss();
     });
     $('#brushOpacity').change(function(){
         if($(this).val()<0){
@@ -266,13 +279,7 @@ $(function(){
         }
         var size = $(this).val();
         brushSaturate = size;
-        $('#ghostPoint').css({
-            '-webkit-filter': 'saturate(' + brushSaturate + '%)',
-            '-moz-filter': 'saturate(' + brushSaturate + '%)',
-            '-o-filter': 'saturate(' + brushSaturate + '%)',
-            '-ms-filter': 'saturate(' + brushSaturate + '%)',
-            'filter': 'saturate(' + brushSaturate + '%)'
-        });
+        ghostFilterCss();
     });
     $('#brushBrightness').change(function(){
         if($(this).val()<0){
@@ -283,13 +290,7 @@ $(function(){
         }
         var size = $(this).val();
         brushBrightness = size;
-        $('#ghostPoint').css({
-            '-webkit-filter': 'brightness(' + brushBrightness + ')',
-            '-moz-filter': 'brightness(' + brushBrightness + ')',
-            '-o-filter': 'brightness(' + brushBrightness + ')',
-            '-ms-filter': 'brightness(' + brushBrightness + ')',
-            'filter': 'brightness(' + brushBrightness + ')'
-        });
+        ghostFilterCss();
     });
     $('#brushHue').change(function(){
         if($(this).val()<0){
@@ -300,13 +301,7 @@ $(function(){
         }
         var size = $(this).val();
         brushHue = size;
-        $('#ghostPoint').css({
-            '-webkit-filter': 'hue-rotate(' + brushHue + 'deg)',
-            '-moz-filter': 'hue-rotate(' + brushHue + 'deg)',
-            '-o-filter': 'hue-rotate(' + brushHue + 'deg)',
-            '-ms-filter': 'hue-rotate(' + brushHue + 'deg)',
-            'filter': 'hue-rotate(' + brushHue + 'deg)'
-        });
+        ghostFilterCss();
     });
     $('#backColor').change(function(){
         backColor = $(this).val();
@@ -340,10 +335,96 @@ $(function(){
     $('#field').click(function(e){
         var pl = e.clientX - brushSize/2 -fieldX;
         var pt = e.clientY - brushSize/2 -fieldY;
-        $(this).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
+        $('#layer' + nowLayer).append('<img src="'+ brush +'" class="afterImage action'+ actionCount +'" style="left: '+ pl +'px;top: '+ pt +'px;-webkit-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-moz-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-o-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);-ms-filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);filter: blur(' + brushBlur + 'px) saturate(' + brushSaturate +'%) brightness(' + brushBrightness + ') hue-rotate(' + brushHue + 'deg);"  width=" ' + brushSize + ' "  height=" ' + brushSize + '" />');
         actionCount++;
+        countImg();
         if(actionCount>highActionCount){
             highActionCount = actionCount;
         }
+    });
+    $('#layerPlus').click(function(){
+        highLayer++;
+        nowLayer = highLayer;
+        $('#layerBox').find('.layerList').each(function(){
+            $(this).removeClass('activeLayer');
+        });
+        $('#ghostPoint').after('<div id="layer' + nowLayer + '" class="layer" style="z-index:' + nowLayer + ';"></div>');
+        $('#lHead').after('<li id="l' + nowLayer + '" class="activeLayer layerList clearfix"><p class="layerVisibility on"></p><p class="layerName">layer' + nowLayer + '</p><input class="inputLayerName" type="text" /><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p></li>');
+    });
+    $('#layerMinus').click(function(){
+        var nothing = nowLayer;
+        $('#layer' + nowLayer).remove();
+        $('#l' + nowLayer).remove();
+        if(highLayer==nowLayer){
+            highLayer--;
+        }
+        $('#layerBox').find('.layerList').each(function(){
+            nowLayer = $(this).attr('id').replace(/l/g,'');
+            $(this).addClass('activeLayer');
+            return false;
+        });
+        if(nothing==nowLayer){
+            $('#ghostPoint').after('<div id="layer1" class="layer" style="z-index:1;"></div>');
+            $('#lHead').after('<li id="l1" class="activeLayer layerList clearfix"><p class="layerVisivility on"></p><p class="layerName">layer1</p><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p></li>');
+        }
+    });
+    $('#layerBox').on('click','.layerList',function(){
+        nowLayer = $(this).attr('id').replace(/l/g,'');
+        $('#layerBox').find('.layerList').each(function(){
+            $(this).removeClass('activeLayer');
+        });
+        $(this).addClass('activeLayer');
+    });
+    $('#layerBox').on('click','.up',function(){
+        var list = $(this).parents('.layerList');
+        if(list.prev().attr('id')=='lHead'){
+            return false;
+        }
+        var num = list.attr('id').replace(/l/g,'');
+        var nextNum = list.prev().attr('id').replace(/l/g,'');
+        var thisStyle = $('#layer' + num).attr('style');
+        var targetStyle = $('#layer' + nextNum).attr('style');
+        list.prev().clone().insertAfter(list);
+        list.prev().remove();
+        $('#layer' + nextNum).attr('style',thisStyle);
+        $('#layer' + num).attr('style',targetStyle);
+    });
+    $('#layerBox').on('click','.down',function(){
+        var list = $(this).parents('.layerList');
+        if(list.next().length==0){
+            return false;
+        }
+        var num = list.attr('id').replace(/l/g,'');
+        var prevNum = list.next().attr('id').replace(/l/g,'');
+        var thisStyle = $('#layer' + num).attr('style');
+        var targetStyle = $('#layer' + prevNum).attr('style');
+        list.next().clone().insertBefore(list);
+        list.next().remove();
+        $('#layer' + prevNum).attr('style',thisStyle);
+        $('#layer' + num).attr('style',targetStyle);
+    });
+    $('#layerBox').on('click','.layerVisibility',function(){
+        var target = $(this);
+        layerVisibility(target);
+    });
+    $('#layerBox').on('click','.layerName',function(){
+        var beforeName = $(this).text();
+        $(this).next().css({
+            'display':'block'
+        });
+        $(this).css({
+            'display':'none'
+        });
+        $(this).next().val(beforeName);
+    });
+    $('#layerBox').on('blur','.inputLayerName',function(){
+        $(this).css({
+            'display':''
+        });
+        $(this).prev().css({
+            'display':''
+        });
+        var newText = $(this).val();
+        $(this).prev().text(newText);
     });
 });
