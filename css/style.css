@@ -176,6 +176,10 @@ h2 {
   text-align: center;
 }
 
+.layerPanel ul li .layerVisibilityH {
+  width: 10%;
+}
+
 .layerPanel ul li .layerVisibility {
   width: 10%;
   cursor: pointer;
@@ -187,6 +191,10 @@ h2 {
 
 .layerPanel ul li .off:before {
   content: '○';
+}
+
+.layerPanel ul li .layerNameH {
+  width: 50%;
 }
 
 .layerPanel ul li .layerName {
@@ -203,7 +211,15 @@ h2 {
   display: none;
 }
 
+.layerPanel ul li .imgNumH {
+  width: 20%;
+}
+
 .layerPanel ul li .imgNum {
+  width: 20%;
+}
+
+.layerPanel ul li .upDownH {
   width: 20%;
 }
 

@@ -152,6 +152,9 @@ h2{
                 margin: 0;
                 text-align: center;
             }
+            .layerVisibilityH{
+                width: 10%;
+            }
             .layerVisibility{
                 width: 10%;
                 cursor: pointer;
@@ -166,6 +169,9 @@ h2{
                     content: '○';
                 }
             }
+            .layerNameH{
+                width: 50%;
+            }
             .layerName{
                 width: 50%;
                 cursor: pointer;
@@ -178,7 +184,13 @@ h2{
                 float: left;
                 display: none;
             }
+            .imgNumH{
+                width: 20%;
+            }
             .imgNum{
+                width: 20%;
+            }
+            .upDownH{
                 width: 20%;
             }
             .upDown{
