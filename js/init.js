@@ -1,4 +1,4 @@
-var cursorList = ['images/1.png','images/2.png','images/3.png','images/4.png','images/5.png','images/6.png','images/7.png','images/8.png','images/9.png'];
+var cursorList = ['images/burush1.png','images/burush2.png','images/burush3.png','images/burush4.png','images/burush5.png'];
 var rnd = 0;
 var brush = 'images/1.png';
 var brushSize = 10;
