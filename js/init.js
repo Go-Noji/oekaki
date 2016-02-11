@@ -15,7 +15,6 @@ var fieldY = 0;
 var actionCount = 0;
 var highActionCount = 0;
 var undoFlg = 0;
-var canvasFlg = 0;
 var pl = 0;
 var pt = 0;
 var bombTimer = '';
@@ -195,12 +194,7 @@ $(function(){
     $('#field').mousemove(function(e){
         pl = e.clientX - brushSize/2 -fieldX;
         pt = e.clientY - brushSize/2 -fieldY;
-        if(canvasFlg===0){
-            afterImage(e);
-        }
-        else{
-            canvasDraw(e);
-        }
+        afterImage(e);
     });
     $('#brush').on('click','li',function(){
         brushSelect($(this));
