@@ -365,7 +365,7 @@ $(function(){
         });
         if(nothing==nowLayer){
             $('#ghostPoint').after('<div id="layer1" class="layer" style="z-index:1;"></div>');
-            $('#lHead').after('<li id="l1" class="activeLayer layerList clearfix"><p class="layerVisivility on"></p><p class="layerName">layer1</p><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p></li>');
+            $('#lHead').after('<li id="l1" class="activeLayer layerList clearfix"><p class="layerVisibility on"></p><p class="layerName">layer1</p><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p></li>');
         }
     });
     $('#layerBox').on('click','.layerList',function(){
