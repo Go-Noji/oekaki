@@ -358,9 +358,9 @@ $(function(){
             return false;
         });
         if(nothing==nowLayer){
+            highLayer = 1;
             $('#ghostPoint').after('<div id="layer1" class="layer" style="z-index:1;"></div>');
             $('#lHead').after('<li id="l1" class="activeLayer layerList clearfix"><p class="layerVisibility on"></p><p class="layerName">layer1</p><p class="imgNum">0</p><p class="upDown"><input class="up" type="button" value="up" /><input class="down" type="button" value="down"></p></li>');
-            highLayer = 1;
         }
     });
     $('#layerBox').on('click','.layerList',function(){
